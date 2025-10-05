@@ -7,6 +7,8 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)
 ![Supabase](https://img.shields.io/badge/Supabase-Latest-3ecf8e)
 
+[![📸 Посмотреть скриншоты](https://img.shields.io/badge/📸_Скриншоты-FF6B6B?style=for-the-badge&logo=image&logoColor=white)](https://imgur.com/a/3MY3dTp)
+
 ## ✨ Основные возможности
 
 - 📊 **Dashboard с аналитикой** - визуализация статистики и прогресса
