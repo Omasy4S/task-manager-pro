@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    // Указываем, какую версию JavaScript генерировать
+    "target": "ES2017",
+    // Используем современные модули ES
+    "lib": ["dom", "dom.iterable", "esnext"],
+    // Разрешаем использовать JavaScript файлы
+    "allowJs": true,
+    // Пропускаем проверку типов в библиотеках
+    "skipLibCheck": true,
+    // Строгая проверка типов - важно для профессионального кода
+    "strict": true,
+    // Не генерируем JS файлы (это делает Next.js)
+    "noEmit": true,
+    // Поддержка ES модулей
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    // Поддержка JSX для React
+    "jsx": "preserve",
+    // Включаем инкрементальную компиляцию для скорости
+    "incremental": true,
+    // Настройка путей для удобного импорта
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,114 @@
+/**
+ * Глобальные стили приложения
+ * Tailwind CSS директивы и кастомные стили
+ */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Базовые стили */
+@layer base {
+  /* Настройка цветов для темной темы */
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+  }
+
+  /* Сброс стилей */
+  * {
+    @apply border-gray-200;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  body.dark {
+    @apply bg-gray-900 text-gray-100;
+  }
+}
+
+/* Кастомные утилиты */
+@layer utilities {
+  /* Скрытие скроллбара но сохранение функциональности */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Плавный скролл */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Убираем outline при клике на элементы */
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid theme('colors.primary.500');
+  outline-offset: 2px;
+}
+
+/* Убираем белый квадрат при перетаскивании */
+[draggable="true"] {
+  -webkit-user-drag: element;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Убираем outline у всех элементов при обычном клике */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Стили для Recharts (графики) */
+.recharts-wrapper {
+  @apply mx-auto;
+}
+
+.recharts-legend-wrapper {
+  @apply text-sm;
+}
