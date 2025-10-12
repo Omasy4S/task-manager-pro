@@ -7,6 +7,11 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)
 ![Supabase](https://img.shields.io/badge/Supabase-Latest-3ecf8e)
 
+<<<<<<< HEAD
+=======
+[![📸 Посмотреть скриншоты](https://img.shields.io/badge/📸_Скриншоты_приложения-FF6B6B?style=for-the-badge&logo=image&logoColor=white)](https://imgur.com/a/3MY3dTp)
+
+>>>>>>> aba1aec33bedce05beebe0480f099ef9c38938e0
 ## ✨ Основные возможности
 
 - 📊 **Dashboard с аналитикой** - визуализация статистики и прогресса
@@ -101,6 +106,7 @@ npm run dev
 npm run build
 npm start
 ```
+
 
 ## 📁 Структура проекта
 
