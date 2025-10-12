@@ -7,10 +7,6 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)
 ![Supabase](https://img.shields.io/badge/Supabase-Latest-3ecf8e)
 
-## 🌐 Демо
-
-**🔗 Живая версия:** [https://omasy4s.github.io/task-manager-pro/](https://omasy4s.github.io/task-manager-pro/)
-
 [![📸 Посмотреть скриншоты](https://img.shields.io/badge/📸_Скриншоты_приложения-FF6B6B?style=for-the-badge&logo=image&logoColor=white)](https://imgur.com/a/3MY3dTp)
 
 ## ✨ Основные возможности
