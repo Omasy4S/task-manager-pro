@@ -17,6 +17,9 @@ export function useAuth() {
     // Подписываемся на изменения аутентификации
     const { data: authListener } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        // Обрабатываем только события входа/выхода, игнорируем INITIAL_SESSION
+        if (event === 'INITIAL_SESSION') return;
+        
         if (session?.user) {
           // Получаем полные данные пользователя из profiles
           const { data: profile } = await supabase

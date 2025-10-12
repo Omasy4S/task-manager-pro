@@ -33,6 +33,20 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     // Определять сессию из URL (для email подтверждений)
     detectSessionInUrl: true,
+    // Ускоряем проверку сессии
+    flowType: 'pkce',
+  },
+  global: {
+    headers: {
+      'x-client-info': 'task-manager-pro',
+    },
+  },
+  db: {
+    schema: 'public',
+  },
+  // Увеличиваем таймаут для медленных соединений
+  realtime: {
+    timeout: 10000,
   },
 });
 

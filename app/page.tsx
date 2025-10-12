@@ -24,12 +24,8 @@ export default function HomePage() {
    * Проверяем аутентификацию при загрузке
    */
   useEffect(() => {
-    // Небольшая задержка для проверки сессии
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 500);
-
-    return () => clearTimeout(timer);
+    // Убираем искусственную задержку - проверяем сразу
+    setIsLoading(false);
   }, []);
 
   // Показываем загрузку
