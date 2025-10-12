@@ -17,7 +17,7 @@ const nextConfig = {
   // Базовый путь (замените на имя вашего репозитория)
   // Например: basePath: '/task-manager-pro'
   // Оставьте пустым если используете custom domain
-  basePath: process.env.NEXT_PUBLIC_BASE_PATH || '',
+  basePath: '/task-manager-pro',
   
   // Отключаем оптимизацию изображений для статического экспорта
   images: {
