@@ -2,46 +2,50 @@ import { create } from 'zustand';
 import { Task, User, Theme } from './types';
 
 /**
- * Zustand Store - легкий state management для React
- * Альтернатива Redux, но проще и с меньшим количеством boilerplate кода
+ * ============================================
+ * ZUSTAND STORE - ГЛОБАЛЬНОЕ СОСТОЯНИЕ
+ * ============================================
+ * Легкий state management для React
+ * Альтернатива Redux с минимальным boilerplate
  */
 
-// Интерфейс состояния приложения
+// ============================================
+// ИНТЕРФЕЙС СОСТОЯНИЯ
+// ============================================
 interface AppState {
-  // Текущий пользователь
+  // --- Пользователь ---
   user: User | null;
   setUser: (user: User | null) => void;
   
-  // Задачи
+  // --- Задачи ---
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
   addTask: (task: Task) => void;
   updateTask: (id: string, updates: Partial<Task>) => void;
   deleteTask: (id: string) => void;
   
-  // Тема приложения
+  // --- Тема ---
   theme: Theme;
   setTheme: (theme: Theme) => void;
   
-  // UI состояние
+  // --- UI состояние ---
   isSidebarOpen: boolean;
   toggleSidebar: () => void;
   
-  // Модальные окна
+  // --- Модальные окна ---
   isCreateTaskModalOpen: boolean;
   setCreateTaskModalOpen: (isOpen: boolean) => void;
   
-  // Выбранная задача для редактирования
+  // --- Выбранная задача ---
   selectedTask: Task | null;
   setSelectedTask: (task: Task | null) => void;
 }
 
-/**
- * Создаем store с помощью Zustand
- * Этот store доступен из любого компонента приложения
- */
+// ============================================
+// СОЗДАНИЕ STORE
+// ============================================
 export const useAppStore = create<AppState>((set) => ({
-  // Начальное состояние
+  // --- Начальное состояние ---
   user: null,
   tasks: [],
   theme: 'light',
@@ -49,28 +53,33 @@ export const useAppStore = create<AppState>((set) => ({
   isCreateTaskModalOpen: false,
   selectedTask: null,
 
-  // Actions (функции для изменения состояния)
+  // ============================================
+  // ACTIONS - ПОЛЬЗОВАТЕЛЬ
+  // ============================================
   
   /**
    * Устанавливает текущего пользователя
    */
   setUser: (user) => set({ user }),
 
+  // ============================================
+  // ACTIONS - ЗАДАЧИ
+  // ============================================
+  
   /**
-   * Устанавливает все задачи (обычно после загрузки из БД)
+   * Устанавливает все задачи (после загрузки из БД)
    */
   setTasks: (tasks) => set({ tasks }),
 
   /**
-   * Добавляет новую задачу в список
+   * Добавляет новую задачу
    */
   addTask: (task) => set((state) => ({
     tasks: [...state.tasks, task],
   })),
 
   /**
-   * Обновляет существующую задачу
-   * Находит задачу по ID и применяет обновления
+   * Обновляет задачу по ID
    */
   updateTask: (id, updates) => set((state) => ({
     tasks: state.tasks.map((task) =>
@@ -85,6 +94,10 @@ export const useAppStore = create<AppState>((set) => ({
     tasks: state.tasks.filter((task) => task.id !== id),
   })),
 
+  // ============================================
+  // ACTIONS - ТЕМА
+  // ============================================
+  
   /**
    * Переключает тему приложения
    */
@@ -112,6 +125,10 @@ export const useAppStore = create<AppState>((set) => ({
     set({ theme });
   },
 
+  // ============================================
+  // ACTIONS - UI
+  // ============================================
+  
   /**
    * Переключает видимость боковой панели
    */
@@ -119,6 +136,10 @@ export const useAppStore = create<AppState>((set) => ({
     isSidebarOpen: !state.isSidebarOpen,
   })),
 
+  // ============================================
+  // ACTIONS - МОДАЛЬНЫЕ ОКНА
+  // ============================================
+  
   /**
    * Открывает/закрывает модальное окно создания задачи
    */

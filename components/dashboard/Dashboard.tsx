@@ -5,108 +5,86 @@ import { CheckCircle2, Clock, AlertCircle, TrendingUp, Calendar } from 'lucide-r
 import { StatsCard } from './StatsCard';
 import { TaskChart } from './TaskChart';
 import { useAppStore } from '@/lib/store';
-import { DashboardStats } from '@/lib/types';
+import { calculateTaskStats } from '@/lib/helpers';
+import { 
+  TASK_STATUS_LABELS, 
+  TASK_STATUS_COLORS,
+  TASK_PRIORITY_LABELS,
+  TASK_PRIORITY_COLORS 
+} from '@/lib/constants';
 
 /**
- * Главный Dashboard с аналитикой и статистикой
- * Показывает обзор всех задач, графики и метрики
+ * ============================================
+ * DASHBOARD - ГЛАВНАЯ ПАНЕЛЬ АНАЛИТИКИ
+ * ============================================
+ * Показывает статистику, графики и метрики
  */
 
 export function Dashboard() {
   const tasks = useAppStore((state) => state.tasks);
 
+  // ============================================
+  // ВЫЧИСЛЕНИЕ СТАТИСТИКИ
+  // ============================================
+  
+  const stats = React.useMemo(() => calculateTaskStats(tasks), [tasks]);
+
+  // ============================================
+  // ДАННЫЕ ДЛЯ ГРАФИКОВ
+  // ============================================
+  
   /**
-   * Вычисляем статистику на основе задач
-   */
-  const stats: DashboardStats = React.useMemo(() => {
-    const now = new Date();
-    const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-    const monthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-
-    const totalTasks = tasks.length;
-    const completedTasks = tasks.filter(t => t.status === 'done').length;
-    const inProgressTasks = tasks.filter(t => t.status === 'in-progress').length;
-    const overdueTasks = tasks.filter(t => 
-      t.dueDate && 
-      new Date(t.dueDate) < now && 
-      t.status !== 'done'
-    ).length;
-
-    const tasksThisWeek = tasks.filter(t => 
-      new Date(t.createdAt) >= weekAgo
-    ).length;
-
-    const tasksThisMonth = tasks.filter(t => 
-      new Date(t.createdAt) >= monthAgo
-    ).length;
-
-    const completionRate = totalTasks > 0 
-      ? Math.round((completedTasks / totalTasks) * 100) 
-      : 0;
-
-    return {
-      totalTasks,
-      completedTasks,
-      inProgressTasks,
-      overdueTasks,
-      completionRate,
-      tasksThisWeek,
-      tasksThisMonth,
-    };
-  }, [tasks]);
-
-  /**
-   * Данные для графика по статусам
+   * График по статусам задач
    */
   const statusChartData = React.useMemo(() => {
     return [
       { 
-        name: 'К выполнению', 
+        name: TASK_STATUS_LABELS.todo, 
         value: tasks.filter(t => t.status === 'todo').length,
-        color: '#94a3b8'
+        color: TASK_STATUS_COLORS.todo
       },
       { 
-        name: 'В работе', 
+        name: TASK_STATUS_LABELS['in-progress'], 
         value: tasks.filter(t => t.status === 'in-progress').length,
-        color: '#3b82f6'
+        color: TASK_STATUS_COLORS['in-progress']
       },
       { 
-        name: 'На проверке', 
+        name: TASK_STATUS_LABELS.review, 
         value: tasks.filter(t => t.status === 'review').length,
-        color: '#f59e0b'
+        color: TASK_STATUS_COLORS.review
       },
       { 
-        name: 'Выполнено', 
+        name: TASK_STATUS_LABELS.done, 
         value: tasks.filter(t => t.status === 'done').length,
-        color: '#22c55e'
+        color: TASK_STATUS_COLORS.done
       },
     ];
   }, [tasks]);
 
   /**
-   * Данные для графика по приоритетам
+   * График по приоритетам задач
    */
   const priorityChartData = React.useMemo(() => {
     return [
       { 
-        name: 'Низкий', 
+        name: TASK_PRIORITY_LABELS.low, 
         value: tasks.filter(t => t.priority === 'low').length,
-        color: '#94a3b8'
+        color: TASK_PRIORITY_COLORS.low
       },
       { 
-        name: 'Средний', 
+        name: TASK_PRIORITY_LABELS.medium, 
         value: tasks.filter(t => t.priority === 'medium').length,
-        color: '#3b82f6'
+        color: TASK_PRIORITY_COLORS.medium
       },
       { 
-        name: 'Высокий', 
+        name: TASK_PRIORITY_LABELS.high, 
         value: tasks.filter(t => t.priority === 'high').length,
-        color: '#f59e0b'
+        color: TASK_PRIORITY_COLORS.high
       },
       { 
-        name: 'Срочно', 
+        name: TASK_PRIORITY_LABELS.urgent, 
         value: tasks.filter(t => t.priority === 'urgent').length,
-        color: '#ef4444'
+        color: TASK_PRIORITY_COLORS.urgent
       },
     ];
   }, [tasks]);

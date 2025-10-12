@@ -18,6 +18,26 @@
 - 📱 **Responsive дизайн** - работает на всех устройствах
 - ⚡ **Real-time обновления** - синхронизация через Supabase
 - 🎨 **Современный UI** - красивый интерфейс с анимациями
+- 🚀 **GitHub Pages готов** - настроен автоматический деплой
+
+## 🎉 Что нового (Оптимизация)
+
+### ✅ Улучшенная структура кода
+- **Централизованные константы** - все статусы, приоритеты и цвета в `lib/constants/`
+- **Вспомогательные функции** - вычисления вынесены в `lib/helpers/`
+- **Четкие разделители** - код разбит на логические блоки с комментариями
+- **Легко читается** - понятная организация и именование
+
+### ✅ Готов к деплою на GitHub Pages
+- **Статический экспорт** - настроен в `next.config.mjs`
+- **GitHub Actions** - автоматический деплой при push
+- **Подробная документация** - пошаговая инструкция в `GITHUB_PAGES_DEPLOY.md`
+- **Один клик** - просто загрузите на GitHub и всё работает!
+
+### ✅ Улучшенная производительность
+- **Оптимизированные вычисления** - мемоизация и кэширование
+- **Переиспользуемый код** - DRY принцип
+- **Типобезопасность** - полная типизация TypeScript
 
 ## 🛠️ Технологический стек
 
@@ -99,47 +119,42 @@ npm run dev
 
 ```
 task-manager-pro/
-├── app/                      # Next.js App Router
-│   ├── layout.tsx           # Корневой layout
-│   ├── page.tsx             # Главная страница
-│   ├── providers.tsx        # React Query провайдер
-│   └── globals.css          # Глобальные стили
-├── components/              # React компоненты
-│   ├── auth/               # Аутентификация
-│   │   ├── LoginForm.tsx
-│   │   └── SignUpForm.tsx
-│   ├── dashboard/          # Dashboard компоненты
-│   │   ├── Dashboard.tsx
-│   │   ├── StatsCard.tsx
-│   │   └── TaskChart.tsx
-│   ├── layout/             # Layout компоненты
-│   │   ├── AppLayout.tsx
-│   │   ├── Header.tsx
-│   │   └── Sidebar.tsx
-│   ├── tasks/              # Компоненты задач
-│   │   ├── KanbanBoard.tsx
-│   │   ├── TaskCard.tsx
-│   │   ├── SortableTaskCard.tsx
-│   │   └── CreateTaskModal.tsx
-│   └── ui/                 # UI компоненты
-│       ├── Button.tsx
-│       ├── Card.tsx
-│       ├── Input.tsx
-│       ├── Modal.tsx
-│       └── Badge.tsx
-├── lib/                     # Утилиты и логика
-│   ├── hooks/              # Custom React hooks
-│   │   ├── useAuth.ts
-│   │   └── useTasks.ts
-│   ├── supabase.ts         # Supabase клиент
-│   ├── store.ts            # Zustand store
-│   ├── types.ts            # TypeScript типы
-│   └── utils.ts            # Утилиты
-├── package.json            # Зависимости
-├── tailwind.config.ts      # Конфигурация Tailwind
-├── tsconfig.json           # Конфигурация TypeScript
-└── next.config.mjs         # Конфигурация Next.js
+├── .github/                 # GitHub конфигурация
+│   └── workflows/          # GitHub Actions для автодеплоя
+├── app/                     # Next.js App Router
+│   ├── layout.tsx          # Корневой layout
+│   ├── page.tsx            # Главная страница
+│   ├── providers.tsx       # React Query провайдер
+│   └── globals.css         # Глобальные стили
+├── components/             # React компоненты
+│   ├── auth/              # Аутентификация
+│   ├── dashboard/         # Dashboard компоненты
+│   ├── layout/            # Layout компоненты
+│   ├── tasks/             # Компоненты задач
+│   └── ui/                # UI компоненты
+├── lib/                    # Утилиты и логика
+│   ├── constants/         # 🆕 Константы приложения
+│   │   ├── app.ts        # Статусы, приоритеты, цвета
+│   │   └── index.ts      # Экспорт констант
+│   ├── helpers/           # 🆕 Вспомогательные функции
+│   │   ├── calculations.ts  # Вычисления статистики
+│   │   └── index.ts      # Экспорт функций
+│   ├── hooks/             # Custom React hooks
+│   │   ├── useAuth.ts    # Аутентификация
+│   │   └── useTasks.ts   # Работа с задачами
+│   ├── supabase.ts        # Supabase клиент
+│   ├── store.ts           # Zustand store (оптимизирован)
+│   ├── types.ts           # TypeScript типы
+│   └── utils.ts           # Утилиты
+├── public/                 # Статические файлы
+├── GITHUB_PAGES_DEPLOY.md  # 🆕 Инструкция по деплою
+├── PROJECT_STRUCTURE.md    # 🆕 Подробная структура
+├── package.json            # Зависимости (+ скрипты деплоя)
+├── next.config.mjs         # 🆕 Настроен для GitHub Pages
+└── tsconfig.json           # TypeScript конфигурация
 ```
+
+📖 **Подробное описание:** [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
 
 ## 🎯 Основные компоненты
 
@@ -193,7 +208,18 @@ task-manager-pro/
 
 ## 🚀 Деплой
 
-### Vercel (рекомендуется)
+### GitHub Pages (настроено и готово!)
+
+Проект **полностью настроен** для деплоя на GitHub Pages:
+
+1. Загрузите код на GitHub
+2. Настройте секреты в Settings → Secrets
+3. Включите GitHub Pages в Settings → Pages
+4. Деплой происходит автоматически при push!
+
+📖 **Подробная инструкция:** [GITHUB_PAGES_DEPLOY.md](./GITHUB_PAGES_DEPLOY.md)
+
+### Vercel (альтернатива)
 
 1. Загрузите код на GitHub
 2. Импортируйте проект в [Vercel](https://vercel.com)
