@@ -2,6 +2,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../supabase';
 import { Task, CreateTaskInput, UpdateTaskInput } from '../types';
 import { useAppStore } from '../store';
+import { logger } from '../logger';
+import { trackDatabaseQuery, measureExecutionTime } from '../metrics';
+import { DatabaseError, ErrorHandler } from '../errors';
 
 /**
  * Custom Hook для работы с задачами
@@ -22,38 +25,64 @@ export function useTasks() {
     queryFn: async () => {
       if (!user) return [];
 
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('order', { ascending: true });
+      return measureExecutionTime('fetch_tasks', async () => {
+        const startTime = performance.now();
 
-      if (error) throw error;
+        try {
+          const { data, error } = await supabase
+            .from('tasks')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('order', { ascending: true });
 
-      // Преобразуем snake_case из БД в camelCase для TypeScript
-      const tasks: Task[] = (data || []).map((task) => ({
-        id: task.id,
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        priority: task.priority,
-        dueDate: task.due_date,
-        createdAt: task.created_at,
-        updatedAt: task.updated_at,
-        userId: task.user_id,
-        assignedTo: task.assigned_to,
-        tags: task.tags,
-        order: task.order,
-      }));
+          const duration = Math.round(performance.now() - startTime);
 
-      // Обновляем store
-      setTasks(tasks);
-      return tasks;
+          if (error) {
+            trackDatabaseQuery('SELECT', 'tasks', duration, false);
+            logger.error('Failed to fetch tasks', error, { userId: user.id });
+            throw new DatabaseError('Failed to load tasks');
+          }
+
+          trackDatabaseQuery('SELECT', 'tasks', duration, true);
+
+          // Преобразуем snake_case из БД в camelCase для TypeScript
+          const tasks: Task[] = (data || []).map((task) => ({
+            id: task.id,
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            priority: task.priority,
+            dueDate: task.due_date,
+            createdAt: task.created_at,
+            updatedAt: task.updated_at,
+            userId: task.user_id,
+            assignedTo: task.assigned_to,
+            tags: task.tags,
+            order: task.order,
+          }));
+
+          // Обновляем store
+          setTasks(tasks);
+          
+          logger.debug('Tasks fetched successfully', {
+            userId: user.id,
+            count: tasks.length,
+            duration,
+          });
+
+          return tasks;
+        } catch (error) {
+          throw ErrorHandler.handle(error, { operation: 'fetchTasks', userId: user.id });
+        }
+      }, { userId: user.id });
     },
     // Включаем запрос только если пользователь авторизован
     enabled: !!user,
     // Обновлять данные каждые 30 секунд
     refetchInterval: 30000,
+    // Retry logic
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
