@@ -6,7 +6,6 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.4-blue)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-3.4-38bdf8)
 ![Supabase](https://img.shields.io/badge/Supabase-Latest-3ecf8e)
-![CI](https://img.shields.io/github/workflow/status/user/repo/CI)
 
 ## Документация
 
