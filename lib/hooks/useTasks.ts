@@ -5,6 +5,7 @@ import { useAppStore } from '../store';
 import { logger } from '../logger';
 import { trackDatabaseQuery, measureExecutionTime } from '../metrics';
 import { DatabaseError, ErrorHandler } from '../errors';
+import { tasksFromDB, taskFromDB, taskToDB } from '../utils/dbTransform';
 
 /**
  * Custom Hook для работы с задачами
@@ -45,21 +46,8 @@ export function useTasks() {
 
           trackDatabaseQuery('SELECT', 'tasks', duration, true);
 
-          // Преобразуем snake_case из БД в camelCase для TypeScript
-          const tasks: Task[] = (data || []).map((task) => ({
-            id: task.id,
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            priority: task.priority,
-            dueDate: task.due_date,
-            createdAt: task.created_at,
-            updatedAt: task.updated_at,
-            userId: task.user_id,
-            assignedTo: task.assigned_to,
-            tags: task.tags,
-            order: task.order,
-          }));
+          // Преобразуем из формата БД (утилита для устранения дублирования кода)
+          const tasks = tasksFromDB(data || []);
 
           // Обновляем store
           setTasks(tasks);
@@ -98,42 +86,19 @@ export function useCreateTask() {
     mutationFn: async (input: CreateTaskInput) => {
       if (!user) throw new Error('Пользователь не авторизован');
 
-      // Преобразуем camelCase в snake_case для БД
+      // Преобразуем в формат БД
+      const dbInput = taskToDB({ ...input, userId: user.id });
+      
       const { data, error } = await supabase
         .from('tasks')
-        .insert({
-          title: input.title,
-          description: input.description,
-          status: input.status,
-          priority: input.priority,
-          due_date: input.dueDate,
-          user_id: user.id,
-          assigned_to: input.assignedTo,
-          tags: input.tags,
-          order: input.order,
-        })
+        .insert(dbInput)
         .select()
         .single();
 
       if (error) throw error;
 
-      // Преобразуем обратно в camelCase
-      const task: Task = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        status: data.status,
-        priority: data.priority,
-        dueDate: data.due_date,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-        userId: data.user_id,
-        assignedTo: data.assigned_to,
-        tags: data.tags,
-        order: data.order,
-      };
-
-      return task;
+      // Преобразуем из формата БД
+      return taskFromDB(data);
     },
     // После успешного создания
     onSuccess: (task) => {
@@ -154,16 +119,8 @@ export function useUpdateTask() {
 
   return useMutation({
     mutationFn: async ({ id, ...updates }: UpdateTaskInput) => {
-      // Преобразуем camelCase в snake_case
-      const dbUpdates: any = {};
-      if (updates.title !== undefined) dbUpdates.title = updates.title;
-      if (updates.description !== undefined) dbUpdates.description = updates.description;
-      if (updates.status !== undefined) dbUpdates.status = updates.status;
-      if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
-      if (updates.dueDate !== undefined) dbUpdates.due_date = updates.dueDate;
-      if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
-      if (updates.tags !== undefined) dbUpdates.tags = updates.tags;
-      if (updates.order !== undefined) dbUpdates.order = updates.order;
+      // Преобразуем в формат БД
+      const dbUpdates = taskToDB(updates);
 
       const { data, error } = await supabase
         .from('tasks')
@@ -174,23 +131,8 @@ export function useUpdateTask() {
 
       if (error) throw error;
 
-      // Преобразуем обратно в camelCase
-      const task: Task = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        status: data.status,
-        priority: data.priority,
-        dueDate: data.due_date,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-        userId: data.user_id,
-        assignedTo: data.assigned_to,
-        tags: data.tags,
-        order: data.order,
-      };
-
-      return task;
+      // Преобразуем из формата БД
+      return taskFromDB(data);
     },
     // Оптимистичное обновление (обновляем UI сразу, не дожидаясь ответа сервера)
     onMutate: async (updates) => {
